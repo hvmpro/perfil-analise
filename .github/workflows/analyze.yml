@@ -1,1 +1,32 @@
+name: Analisar dados
 
+on:
+  schedule:
+    - cron: "30 */6 * * *"
+  workflow_dispatch:
+
+jobs:
+  analyze:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Baixar dados
+        run: |
+          curl -o repos.json https://raw.githubusercontent.com/SEU_USUARIO/perfil-dados/main/repos.json
+
+      - name: Processar
+        run: |
+          echo "{" > resumo.json
+          echo "\"total_repos\": $(jq length repos.json)," >> resumo.json
+          echo "\"total_stars\": $(jq '[.[].stargazers_count] | add' repos.json)" >> resumo.json
+          echo "}" >> resumo.json
+
+      - name: Commit
+        run: |
+          git config user.name "bot"
+          git config user.email "bot@github.com"
+          git add .
+          git commit -m "update analise" || echo "sem mudanças"
+          git push
