@@ -14,7 +14,7 @@ jobs:
 
       - name: Baixar dados
         run: |
-          curl -s -o repos.json https://raw.githubusercontent.com/hvmpro/perfil-dados/main/repos.json
+          curl -s -o repos.json https://raw.githubusercontent.com/hvmpro-core/perfil-dados/main/repos.json
 
       - name: Ver conteúdo
         run: cat repos.json
